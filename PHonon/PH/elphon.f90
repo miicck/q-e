@@ -723,6 +723,9 @@ SUBROUTINE elphsum ( )
   DO irr=1,nirr
      IF (.NOT.done_elph(irr)) RETURN
   ENDDO
+
+  CALL start_clock('elphsum')
+
   elph_dir='elph_dir/'
   IF (ionode) INQUIRE(file=TRIM(elph_dir), EXIST=exst)
   CALL mp_bcast(exst, ionode_id, intra_image_comm) 
@@ -1081,6 +1084,8 @@ SUBROUTINE elphsum ( )
   DEALLOCATE( dosfit )
   DEALLOCATE( xk_collect )
   IF (npool /= 1) DEALLOCATE(el_ph_mat_collect)
+
+  call stop_clock('elphsum')
 
   !
 9000 FORMAT(5x,'Gaussian Broadening: ',f7.3,' Ry, ngauss=',i4)
